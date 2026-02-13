@@ -62,8 +62,6 @@ class CoachEngine:
     @staticmethod
     def get_streak_milestone_message(habit_id, user_id, current_streak):
         """Generate message for streak milestones"""
-        from services.streak_engine import StreakEngine
-
         if current_streak in CoachEngine.STREAK_MESSAGES:
             return CoachEngine.STREAK_MESSAGES[current_streak]
 
@@ -194,6 +192,28 @@ class CoachEngine:
         }
 
     @staticmethod
+    def detect_weekend_warrior(user_id):
+        """Detect if user is particularly active on weekends"""
+        last_30_days = date.today() - timedelta(days=30)
+        logs = HabitLog.query.filter(
+            HabitLog.user_id == user_id,
+            HabitLog.date >= last_30_days,
+            HabitLog.status == 'completed'
+        ).all()
+
+        if not logs: return None
+
+        weekend_logs = sum(1 for log in logs if log.date.weekday() >= 5) # 5=Sat, 6=Sun
+        total_logs = len(logs)
+
+        if total_logs > 5 and (weekend_logs / total_logs) > 0.4:
+            return {
+                'type': 'pattern',
+                'message': "You're a Weekend Warrior! 🛡️ You crush your habits on Saturdays and Sundays."
+            }
+        return None
+
+    @staticmethod
     def get_all_insights(user_id):
         """Get all available insights for user"""
         insights = []
@@ -225,6 +245,11 @@ class CoachEngine:
                 'message': best_day['message'],
                 'data': best_day
             })
+
+        # Weekend Warrior
+        weekend = CoachEngine.detect_weekend_warrior(user_id)
+        if weekend:
+            insights.append(weekend)
 
         return insights
 
