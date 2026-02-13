@@ -7,6 +7,7 @@ from routes.auth import auth_bp
 from routes.habits import habits_bp
 from routes.analytics import analytics_bp
 from routes.mood import mood_bp
+from routes.ai import ai_bp
 
 def create_app(config_name='development'):
     """Application factory"""
@@ -26,6 +27,7 @@ def create_app(config_name='development'):
     app.register_blueprint(habits_bp)
     app.register_blueprint(analytics_bp)
     app.register_blueprint(mood_bp)
+    app.register_blueprint(ai_bp)
 
     # Routes
     @app.route('/')

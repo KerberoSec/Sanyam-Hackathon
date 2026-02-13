@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.*.local
+.env.prod
 
 # Python
 __pycache__/
@@ -32,43 +33,63 @@ MANIFEST
 venv/
 ENV/
 env/
-.venv
+.venv/
+.virtualenv
+venv.bak/
+env.bak/
 
-# IDE
+# IDE & Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
 
-# Database
+# Database & Instance
 *.db
 *.sqlite
 *.sqlite3
+instance/
+habit_tracker.db
 
-# Logs
+# Logs & Temp Files
 *.log
 logs/
+tmp/
+temp/
+*.tmp
 
-# OS
-.DS_Store
+# OS Files
 Thumbs.db
 __MACOSX/
+.AppleDouble
+.LSOverride
 
-# Testing
+# Testing & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.hypothesis/
 
 # Node (if using bundlers)
 node_modules/
 npm-debug.log
 yarn-error.log
 
-# IDE Config
-.editorconfig
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
 
 # Misc
-.env.prod
 secrets.json
+*.bak
+.env.example.local
+coverage.xml
+*.pyo

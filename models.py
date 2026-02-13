@@ -140,3 +140,27 @@ class UserBadge(db.Model):
             'badge_id': self.badge_id,
             'earned_at': self.earned_at.isoformat()
         }
+
+class AIMessage(db.Model):
+    __tablename__ = 'ai_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    message_type = db.Column(db.String(50), nullable=False)  # daily, weekly, recommendation, mood_insight
+    content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.Date, default=date.today, index=True)
+    generated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    cached = db.Column(db.Boolean, default=True)
+
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'message_type', 'date', name='uq_user_message_date'),
+    )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'message_type': self.message_type,
+            'content': self.content,
+            'date': self.date.isoformat(),
+            'generated_at': self.generated_at.isoformat()
+        }

@@ -1,0 +1,38 @@
+services:
+  habitflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: habitflow-app
+    image: habitflow:latest
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: production
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: sqlite:////app/instance/habit_tracker.db
+      SECRET_KEY: dev-secret-key-change-in-production
+      JWT_SECRET_KEY: dev-jwt-secret-key-change-in-production
+      DEBUG: 0
+    volumes:
+      - habitflow-data:/app/instance
+    networks:
+      - habitflow-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  habitflow-data:
+    driver: local
+
+networks:
+  habitflow-network:
+    driver: bridge
