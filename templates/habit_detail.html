@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Detail - HabitFlow</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/dashboard">
+                <i class="fas fa-rocket"></i> HabitFlow
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="ms-auto">
+                    <a class="btn btn-outline-light" href="/dashboard">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Habit Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div style="font-size: 3rem;" id="habitIcon">✨</div>
+                            <div>
+                                <h1 id="habitTitle" class="mb-0">Loading...</h1>
+                                <p class="text-muted mb-0" id="habitCategory">Category</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="row mb-4 g-3">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        🔥
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Current Streak</div>
+                        <div class="stat-value" id="currentStreak">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                        👑
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Longest Streak</div>
+                        <div class="stat-value" id="longestStreak">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                        ✅
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Completions</div>
+                        <div class="stat-value" id="completions">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+                        📊
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Consistency</div>
+                        <div class="stat-value" id="consistency">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mb-4 g-3">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Completion Rate (30 Days)</h5>
+                        <canvas id="completionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Trend (Last 12 Months)</h5>
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Heatmap -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Activity Calendar (Last 30 Days)</h5>
+                        <div id="calendarHeatmap" class="calendar-heatmap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consistency Metrics -->
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Consistency Metrics</h5>
+                        <div class="mb-3">
+                            <label class="mb-2">7-Day Consistency: <span id="consistency7d" class="fw-bold">0%</span></label>
+                            <div class="progress">
+                                <div class="progress-bar" id="progress7d" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="mb-2">30-Day Consistency: <span id="consistency30d" class="fw-bold">0%</span></label>
+                            <div class="progress">
+                                <div class="progress-bar" id="progress30d" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="mb-2">Overall Completion Rate: <span id="completionRate" class="fw-bold">0%</span></label>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" id="progressRate" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Best Performing Days</h5>
+                        <div id="bestDays" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get habit ID from URL
+        const habitId = window.location.pathname.split('/').pop();
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const token = localStorage.getItem('token');
+            const options = {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (data && method !== 'GET') {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(endpoint, options);
+
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return null;
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+        }
+
+        async function loadHabitDetail() {
+            const response = await apiCall(`/api/analytics/habit/${habitId}`);
+            if (!response) return;
+
+            const habit = response.habit;
+            const stats = response.stats;
+            const history = response.history;
+
+            // Update header
+            document.getElementById('habitTitle').textContent = habit.title;
+            document.getElementById('habitIcon').textContent = habit.icon;
+
+            // Update stats
+            document.getElementById('currentStreak').textContent = stats.current_streak;
+            document.getElementById('longestStreak').textContent = stats.longest_streak;
+            document.getElementById('completions').textContent = stats.total_completions;
+            document.getElementById('consistency').textContent = stats.consistency_score_30d + '%';
+
+            // Update consistency metrics
+            document.getElementById('consistency7d').textContent = stats.consistency_score_7d + '%';
+            document.getElementById('consistency30d').textContent = stats.consistency_score_30d + '%';
+            document.getElementById('completionRate').textContent = stats.completion_rate_30d + '%';
+
+            document.getElementById('progress7d').style.width = stats.consistency_score_7d + '%';
+            document.getElementById('progress30d').style.width = stats.consistency_score_30d + '%';
+            document.getElementById('progressRate').style.width = stats.completion_rate_30d + '%';
+
+            // Create completion breakdown chart
+            const completed = history.filter(h => h.status === 'completed').length;
+            const skipped = history.filter(h => h.status === 'skipped').length;
+            const missed = history.filter(h => h.status === 'missed').length;
+
+            const ctx = document.getElementById('completionChart');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Skipped', 'Missed'],
+                    datasets: [{
+                        data: [completed, skipped, missed],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Create calendar heatmap
+            createCalendarHeatmap(history);
+        }
+
+        function createCalendarHeatmap(history) {
+            const container = document.getElementById('calendarHeatmap');
+            const historyMap = {};
+
+            history.forEach(item => {
+                historyMap[item.date] = item.status;
+            });
+
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - 29);
+
+            let html = '<div style="display: grid; grid-template-columns: repeat(7, 50px); gap: 5px;">';
+
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                const dateStr = date.toISOString().split('T')[0];
+                const status = historyMap[dateStr] || 'none';
+
+                let bgColor = '#e5e7eb';
+                if (status === 'completed') bgColor = '#10b981';
+                else if (status === 'skipped') bgColor = '#f59e0b';
+                else if (status === 'missed') bgColor = '#ef4444';
+
+                html += `
+                    <div style="width: 50px; height: 50px; background: ${bgColor}; border-radius: 8px;
+                        display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        title="${dateStr}">
+                        ${date.getDate()}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadHabitDetail);
+    </script>
+</body>
+</html>
