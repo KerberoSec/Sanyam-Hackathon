@@ -395,5 +395,5 @@ For issues, please create an issue on GitHub or email support.
 
 ---
 
-**Developers:** Arun Kumar, Sourav 
+**Developers:** Arun Kumar, Sourav ,Anish thakur
 
