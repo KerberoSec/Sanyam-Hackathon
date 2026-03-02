@@ -395,6 +395,5 @@ For issues, please create an issue on GitHub or email support.
 
 ---
 
-**Built with ❤️ for anyone wanting to build better habits**
+**Developers:** Arun Kumar
 
-Happy habit tracking! 🚀
